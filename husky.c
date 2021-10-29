@@ -121,12 +121,16 @@ void insert_rule(
     new_rule->next = firewall_rules;
     firewall_rules = new_rule;
 }
+
+static struct cdev husky_cdev;
   
 int husky_open(struct inode *inode, struct file *file) {
+    try_module_get(husky_cdev.owner);
     return 0;
 }
 
 int husky_release(struct inode *inode, struct file *file) {
+    module_put(husky_cdev.owner);
     return 0;
 }
 
@@ -140,7 +144,6 @@ long husky_ioctl(struct file *file, unsigned int cmd, unsigned long arg) {
     return -EBADRQC;
 }
 
-static struct cdev husky_cdev;
 struct file_operations husky_fops = {
     .unlocked_ioctl = husky_ioctl,
     .open = husky_open,
