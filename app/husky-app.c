@@ -2,10 +2,11 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <fcntl.h>
-#include <sys/types.h>
-#include <linux/rtc.h>
-#include <linux/ioctl.h>
+#include <sys/types.h>    
+#include <sys/ioctl.h>
 #include <string.h>
+
+const unsigned int HUSKY_CMD_GET_VERS = 1;
 
 char buf[20][1005];
 
@@ -37,7 +38,21 @@ void main() {
         // for(int i=0;i<n;++i) {
         //     printf("cmd[%d]=%s\n",i,buf[i]);
         // }
-        if((strcmp("q",buf[0])==0)||strcmp("exit",buf[0])==0) {
+        if((strcmp("h",buf[0])==0)||strcmp("help",buf[0])==0) {
+            printf("Available commands:\n");
+            printf("list: print all available firewall rules\n");
+            printf("allow <cidr> <proto>: sets an allow firewall rule\n");
+            printf("deny <cidr> <proto>: sets a deny firewall rule\n");
+            printf("version: get firewall kernel module version\n");
+            printf("exit: exit program\n");
+        } else if((strcmp("v",buf[0])==0)||strcmp("ver",buf[0])==0||strcmp("version",buf[0])==0) {
+            long ans = ioctl(fd,HUSKY_CMD_GET_VERS,0);
+            if(ans<0) {
+                perror("failed to get version");
+            } else {
+                printf("Husky version %ld.%ld\n", (ans>>8), ans&0xff);
+            }
+        } else if((strcmp("q",buf[0])==0)||strcmp("exit",buf[0])==0) {
             printf("Bye!\n");
             cmd=-1;
         } else {
