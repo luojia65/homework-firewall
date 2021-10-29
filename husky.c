@@ -152,6 +152,8 @@ struct file_operations husky_fops = {
 
 #define HUSKY_MAJOR 100
 
+// 使用之前：sudo mknod /dev/husky c 100 0
+
 static int __init mod_init(void) {
     int retval;
     dev_t dev = 0;
