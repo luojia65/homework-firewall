@@ -136,6 +136,7 @@ int husky_release(struct inode *inode, struct file *file) {
 
 const unsigned int HUSKY_CMD_GET_VERS = 1;
 const unsigned int HUSKY_CMD_LIST_RULES = 2;
+const unsigned int HUSKY_CMD_ALLOW = 3;
 
 long husky_ioctl(struct file *file, unsigned int cmd, unsigned long arg) {
     switch (cmd) {

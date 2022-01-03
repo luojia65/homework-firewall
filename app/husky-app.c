@@ -7,6 +7,8 @@
 #include <string.h>
 
 const unsigned int HUSKY_CMD_GET_VERS = 1;
+const unsigned int HUSKY_CMD_LIST_RULES = 2;
+const unsigned int HUSKY_CMD_ALLOW = 3;
 
 char buf[20][1005];
 
@@ -48,9 +50,25 @@ void main() {
         } else if((strcmp("v",buf[0])==0)||strcmp("ver",buf[0])==0||strcmp("version",buf[0])==0) {
             long ans = ioctl(fd,HUSKY_CMD_GET_VERS,0);
             if(ans<0) {
-                perror("failed to get version");
+                perror("failed to get version\n");
             } else {
                 printf("Husky version %ld.%ld\n", (ans>>8), ans&0xff);
+            }
+        }else if((strcmp("l",buf[0])==0)||strcmp("list",buf[0])==0) {
+            // inet_addr
+            long ans = ioctl(fd,HUSKY_CMD_LIST_RULES,0);
+            if(ans<0) {
+                perror("failed to deny rule\n");
+            } else {
+                perror("succeeded to deny rule\n");
+            }
+        }else if((strcmp("d",buf[0])==0)||strcmp("deny",buf[0])==0) {
+            // inet_addr
+            long ans = ioctl(fd,HUSKY_CMD_ALLOW,0);
+            if(ans<0) {
+                perror("failed to deny rule\n");
+            } else {
+                perror("succeeded to deny rule\n");
             }
         } else if((strcmp("q",buf[0])==0)||strcmp("exit",buf[0])==0) {
             printf("Bye!\n");
