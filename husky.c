@@ -137,13 +137,23 @@ int husky_release(struct inode *inode, struct file *file) {
 const unsigned int HUSKY_CMD_GET_VERS = 1;
 const unsigned int HUSKY_CMD_LIST_RULES = 2;
 const unsigned int HUSKY_CMD_ALLOW = 3;
+const unsigned int HUSKY_CMD_DENY = 4;
+
+static struct husky_firewall_rule *firewall_rules_tmp; // todo
 
 long husky_ioctl(struct file *file, unsigned int cmd, unsigned long arg) {
     switch (cmd) {
         case HUSKY_CMD_GET_VERS:
-            return 0x100;
+            return 0x100; // v1.0
         case HUSKY_CMD_LIST_RULES:
 
+            return 0;
+        case HUSKY_CMD_ALLOW:
+            firewall_rules_tmp = firewall_rules;
+            firewall_rules = NULL;
+            return 0;
+        case HUSKY_CMD_DENY:
+            firewall_rules = firewall_rules_tmp;
             return 0;
     }
     return -EBADRQC;
@@ -172,7 +182,7 @@ static int __init mod_init(void) {
     
     printk(KERN_NOTICE "husky: registering char device %d.%d\n", MAJOR(dev), MINOR(dev));
     firewall_rules = NULL;
-    insert_rule(0, 0, 0, 0, 0, 8000, HUSKY_DENY_TCP);
+    insert_rule(0, 0, 0, 0, 0, 8000, HUSKY_DENY_UDP);
     // 有很多个网络命名空间，这里选择初始启动时的空间init_net
     // 也就意味着husky暂时不支持多个命名空间的情况
     nf_register_net_hook(&init_net, &pre_routing_ops);

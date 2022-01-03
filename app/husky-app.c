@@ -9,6 +9,7 @@
 const unsigned int HUSKY_CMD_GET_VERS = 1;
 const unsigned int HUSKY_CMD_LIST_RULES = 2;
 const unsigned int HUSKY_CMD_ALLOW = 3;
+const unsigned int HUSKY_CMD_DENY = 4;
 
 char buf[20][1005];
 
@@ -64,11 +65,19 @@ void main() {
             }
         }else if((strcmp("d",buf[0])==0)||strcmp("deny",buf[0])==0) {
             // inet_addr
-            long ans = ioctl(fd,HUSKY_CMD_ALLOW,0);
+            long ans = ioctl(fd,HUSKY_CMD_DENY,0);
             if(ans<0) {
                 perror("failed to deny rule\n");
             } else {
                 perror("succeeded to deny rule\n");
+            }
+        } else if((strcmp("a",buf[0])==0)||strcmp("allow",buf[0])==0) {
+            // inet_addr
+            long ans = ioctl(fd,HUSKY_CMD_ALLOW,0);
+            if(ans<0) {
+                perror("failed to allow rule\n");
+            } else {
+                perror("succeeded to allow rule\n");
             }
         } else if((strcmp("q",buf[0])==0)||strcmp("exit",buf[0])==0) {
             printf("Bye!\n");
