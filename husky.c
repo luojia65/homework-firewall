@@ -135,11 +135,15 @@ int husky_release(struct inode *inode, struct file *file) {
 }
 
 const unsigned int HUSKY_CMD_GET_VERS = 1;
+const unsigned int HUSKY_CMD_LIST_RULES = 2;
+
 long husky_ioctl(struct file *file, unsigned int cmd, unsigned long arg) {
     switch (cmd) {
         case HUSKY_CMD_GET_VERS:
             return 0x100;
-        
+        case HUSKY_CMD_LIST_RULES:
+
+            return 0;
     }
     return -EBADRQC;
 }
